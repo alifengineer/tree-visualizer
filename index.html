@@ -62,7 +62,8 @@
 
             const validate = () => {
                 // first and last comma
-                input = input.replace(/^,|,$/g, "");
+                input = input.replace(/^,/g, "");
+
                 input = input.replace(/\s/g, ",");
                     // ,, -> ,
                 input = input.replace(/,{2,}/g, ",");
@@ -93,7 +94,8 @@
             };
 
             if (!validate()) return;
-
+            
+            input = input.replace(/^,|,$/g, "")
             let inputArr = input.split(",");
             let inputArr2 = [];
             for (let i = 0; i < inputArr.length; i++) {
