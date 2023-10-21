@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>tree-visualizer</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/vs.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/tree-visualizer/src/tree-visualizer.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"
+    ></script>
+  </head>
+  <body>
+    <div class="" style="background-color: #f7f7e4">
+      <div>
+        <h2
+          class="d-flex justify-content-center p-5"
+          style="color: rgb(69, 54, 10)"
+        >
+            Строим дерево
+        </h2>
+      </div>
+      <div class="container p-2">
+        <p>
+           
+        </p>
+      </div>
+      <div class="container border rounded p-2">
+        <p>
+          <input type="text" placeholder="[1, 2, -1, 3] or [1 2 -1 3]" id="input-tree" />
+        </p>
+        <div id="findBST" style="height: 25em"></div>
+        <div id="error-reporting" style="height: 50px ; color: red"></div>
+
+        <script type="text/javascript">
+          let findBSTDiv = document.getElementById("findBST");
+          findBSTDiv.style.overflow = "scroll";
+          findBSTDiv.style.background = "rgb(171,216,167)";
+          let findBST = treeVisualizer({ target: "findBST", animation: true });
+        
+        document.getElementById("input-tree").oninput = () => {
+            let input = document.getElementById("input-tree").value;
+
+            const validate = () => {
+                // first and last comma
+                input = input.replace(/^,|,$/g, "");
+                input = input.replace(/\s/g, ",");
+                    // ,, -> ,
+                input = input.replace(/,{2,}/g, ",");
+                // validate on duplicate integers
+
+                // dublicated node values
+                let inputArr = input.split(",");
+                document.getElementById("input-tree").value = inputArr;
+                let inputArr2 = [];
+                for (let i = 0; i < inputArr.length; i++) {
+                inputArr2.push(parseInt(inputArr[i]));
+                }
+                let inputArr3 = inputArr2.filter((item) => item != -1);
+
+                if (new Set(inputArr3).size !== inputArr3.length) {
+                document.getElementById("error-reporting").innerHTML =
+                    "Invalid input: duplicate node values";
+                return false;
+                }
+
+                if (input.match(/[^0-9,-]|^-1$|,,.*?/g)) {
+                document.getElementById("error-reporting").innerHTML =
+                    "Invalid input: " + input.match(/[^0-9,-]|^-1$|,,.*?/g);
+                return false;
+                }
+                document.getElementById("error-reporting").innerHTML = "";
+                return true;
+            };
+
+            if (!validate()) return;
+
+            let inputArr = input.split(",");
+            let inputArr2 = [];
+            for (let i = 0; i < inputArr.length; i++) {
+              inputArr2.push(parseInt(inputArr[i]));
+            }
+            
+            data = ""
+            for (let i = 0; i < inputArr2.length; i++) {
+              data += (inputArr2[i]==-1? null:inputArr2[i]) + "," 
+            }
+            
+            data = "[" + data.substring(0, data.length-1) + "]"
+
+            if (input == "") {
+              data = null
+            }
+            findBST.drawData(
+              [
+                {
+                  data: data,
+                },
+              ],
+              `<div class="d-flex justify-content-center">Старт</div>`
+            );
+          };
+        </script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
